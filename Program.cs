@@ -1,5 +1,8 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
+using WebAPI.Interface;
+using WebAPI.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,7 @@ builder.Services.AddSwaggerGen();
 //     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 // });
 
+
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseMySql(
@@ -21,6 +25,20 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
         new MySqlServerVersion(new Version(8, 3, 10)) // Replace with your MySQL version
     );
 });
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; // Prevent cycles without adding metadata
+    });
+
+// builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddScoped<IStockRepository, StockRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+// In Program.cs or Startup.cs
 
 
 var app = builder.Build();

@@ -22,9 +22,12 @@ namespace WebAPI.Models
         public string Industry { get; set; } = "";
         public long MarketCap { get; set; }
 
-        [JsonIgnore]
-        public  List<Comment> Comments { get; set; } = new List<Comment>();
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        // [JsonIgnore]
+        // public  List<Comment> Comments { get; set; } = new List<Comment>();
+
+        public List<Comment> Comments { get; set; } = [];
 
     }
 }

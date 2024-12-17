@@ -2,36 +2,38 @@ using WebAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Models;
+using WebAPI.DTO;
 using System;
+using WebAPI.Mapper;
+using WebAPI.Interface;
+using WebAPI.DTO.Comment;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/v1/[controller]")]
+    // [Route("api/v1/[controller]")]
+    [Route("api/v1/comment")]
     [ApiController]
-    public class CommentController : ControllerBase
+    public class CommentController(ApplicationDBContext context, ICommentRepository commentRepository, IStockRepository stockRepository) : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        private readonly ApplicationDBContext _context = context;
+        private readonly ICommentRepository _commentRepository = commentRepository;
 
-        public CommentController(ApplicationDBContext context)
-        {
-            _context = context;
-        }
+        private readonly IStockRepository _stockRepository = stockRepository;
 
         // GET: api/Comment
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
+        public async Task<ActionResult<IEnumerable<CommentDTO>>> GetComments()
         {
-            return await _context.Comments.Include(c => c.Stock).ToListAsync();
+            var comments = await _commentRepository.GetAllCommentsAsync();
+            var commentDTOs = comments.Select(comment => comment.ToCommentDTO()).ToList();
+            return Ok(commentDTOs);
         }
 
         // GET: api/Comment/{id}
-        [HttpGet("{id}")]
+        [HttpGet("{id:Guid}")]
         public async Task<ActionResult<Comment>> GetComment(Guid id)
         {
-            var comment = await _context.Comments
-                                        .Include(c => c.Stock)
-                                        .FirstOrDefaultAsync(c => c.Id == id);
-
+            var comment = await _commentRepository.GetCommentByIdAsync(id);
             if (comment == null)
             {
                 return NotFound();
@@ -41,74 +43,77 @@ namespace WebAPI.Controllers
         }
 
         // PUT: api/Comment/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment(Guid id, Comment comment)
+        [HttpPut("{id:Guid}")]
+        public async Task<IActionResult> PutComment(Guid id, [FromBody] CreateCommentRequestDTO commentRequest)
         {
-            if (id != comment.Id)
+            // Check if the stock exists using _stockRepository
+            var stockExists = await _stockRepository.StockExist(id);
+            if (stockExists != true) // Checks for null or false
             {
-                return BadRequest();
+                return NotFound($"Stock with ID {id} not found.");
             }
+            var comment = commentRequest.ToCreateComment();
+            var existingComment = await _commentRepository.UpdateCommentAsync(id, comment);
+            if (existingComment == null) return NotFound();
 
-            _context.Entry(comment).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CommentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(existingComment.ToCommentDTO());
         }
 
         // POST: api/Comment
-        [HttpPost]
-        public async Task<ActionResult<Comment>> PostComment(Comment comment)
+        [HttpPost("{stockId:Guid}")]
+        public async Task<ActionResult<CommentDTO>> PostComment([FromRoute] Guid stockId, [FromBody] CreateCommentRequestDTO commentRequest)
         {
-            // Ensure StockId is valid (non-null) and exists
-            if (comment.StockId != Guid.Empty)
+            // Check if the stock exists using _stockRepository
+            var stockExists = await _stockRepository.StockExist(stockId);
+            if (stockExists != true) // Checks for null or false
             {
-                var stock = await _context.Stocks.FindAsync(comment.StockId);
-                if (stock == null)
-                {
-                    return BadRequest("Invalid StockId.");
-                }
+                return NotFound($"Stock with ID {stockId} not found.");
             }
 
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
+            // Map CreateCommentRequestDTO to Comment entity
+            var comment = commentRequest.ToCreateComment();
 
-            return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
+            // Save the comment using the repository
+            var newComment = await _commentRepository.CreateCommentAsync(stockId, comment);
+
+            // Map the newly created Comment to CommentDTO for the response
+            return CreatedAtAction(nameof(GetComment), new { id = newComment.Id }, newComment.ToCommentDTO());
         }
 
+
+
+
         // DELETE: api/Comment/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:Guid}")]
         public async Task<ActionResult<Comment>> DeleteComment(Guid id)
         {
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _commentRepository.DeleteCommentAsync(id);
             if (comment == null)
             {
                 return NotFound();
             }
 
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync();
-
             return comment;
         }
 
-        private bool CommentExists(Guid id)
+
+
+        // GET: api/comment/stock/{stockId}
+        [HttpGet("stock/{stockId:Guid}")]
+        public async Task<ActionResult<IEnumerable<Comment>>> GetCommentsByStockId(Guid stockId)
         {
-            return _context.Comments.Any(e => e.Id == id);
+            // Fetch all comments associated with the given stock ID
+            var comments = await _commentRepository.GetCommentByStockIdAsync(stockId);
+
+            if (comments == null || comments.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(comments);
         }
+
+
+
     }
 }

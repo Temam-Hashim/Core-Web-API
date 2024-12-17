@@ -1,104 +1,84 @@
-using WebAPI.Data;  // This will allow you to access ApplicationDBContext
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebAPI.Models;
+using WebAPI.Data;
+using WebAPI.DTO;
+using WebAPI.Interface;
+using WebAPI.Mapper;
+
 
 namespace WebAPI.Controllers
 {
-    // [Route("api/[controller]")]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/stock")]
     [ApiController]
-    public class StockController : ControllerBase
+    public class StockController(ApplicationDBContext context, IStockRepository stockRepository) : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        private readonly ApplicationDBContext _context = context;
+        private readonly IStockRepository _stockRepository = stockRepository;
 
-        public StockController(ApplicationDBContext context)
-        {
-            _context = context;
-        }
-
-        // GET: api/Stock
+        // GET: api/v1/stock
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Stock>>> GetStocks()
+        public async Task<ActionResult<IEnumerable<StockDTO>>> GetStocks([FromQuery] string? search)
         {
-            return await _context.Stocks.Include(s => s.Comments).ToListAsync();
+            var stocks = await _stockRepository.GetAllStocksAsync(search);
+            var stockDTOs = stocks.Select(stock => stock.ToStockDTO()).ToList();
+            return Ok(stockDTOs);
         }
 
-        // GET: api/Stock/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Stock>> GetStock(Guid id)
+        // GET: api/v1/stock/{id}
+        [HttpGet("{id:Guid}")]
+        public async Task<ActionResult<StockDTO>> GetStock(Guid id)
         {
-            var stock = await _context.Stocks
-                                       .Include(s => s.Comments)
-                                       .FirstOrDefaultAsync(s => s.Id == id);
+            // Call the repository
+            var stockDTO = await _stockRepository.GetStockByIdAsync(id);
 
-            if (stock == null)
-            {
-                return NotFound();
-            }
+            // Return 404 if the stock is not found
+            if (stockDTO == null) return NotFound();
 
-            return stock;
+            // Return the DTO
+            return Ok(stockDTO);
         }
 
-        // PUT: api/Stock/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutStock(Guid id, Stock stock)
-        {
-            if (id != stock.Id)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(stock).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StockExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Stock
+        // POST: api/v1/stock
         [HttpPost]
-        public async Task<ActionResult<Stock>> PostStock(Stock stock)
+        public async Task<ActionResult<StockDTO>> CreateStock([FromBody] CreateStockRequestDTO createRequestDTO)
         {
-            _context.Stocks.Add(stock);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetStock", new { id = stock.Id }, stock);
+            // Use the service to create the stock
+            var stockDTO = createRequestDTO.ToCreateStockDTO();
+            var stock = await _stockRepository.CreateStockAsync(stockDTO);
+           
+            // Return the created stock
+            return CreatedAtAction(nameof(GetStock), new { id = stock.Id }, stock);
         }
 
-        // DELETE: api/Stock/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Stock>> DeleteStock(Guid id)
+        // PUT: api/v1/stock/{id}
+        [HttpPut("{id:Guid}")]
+        public async Task<IActionResult> UpdateStock([FromRoute] Guid id, [FromBody] CreateStockRequestDTO createRequestDTO)
         {
-            var stock = await _context.Stocks.FindAsync(id);
-            if (stock == null)
-            {
-                return NotFound();
-            }
-
-            _context.Stocks.Remove(stock);
-            await _context.SaveChangesAsync();
-
-            return stock;
+            var stockDTO = createRequestDTO.ToCreateStockDTO();
+            var existingStock = await _stockRepository.UpdateStockAsync(id, stockDTO);
+            if (existingStock == null) return NotFound();
+            return Ok(existingStock);
         }
 
-        private bool StockExists(Guid id)
+        // DELETE: api/v1/stock/{id}
+        [HttpDelete("{id:Guid}")]
+        public async Task<IActionResult> DeleteStock(Guid id)
         {
-            return _context.Stocks.Any(e => e.Id == id);
+        
+                var stock = await _stockRepository.DeleteStockAsync(id);
+                if (stock == null) return NotFound();
+
+                return Ok(stock);
+            
+        
         }
+
+        // [HttpGet("filter")]
+        // public async Task<ActionResult<StockDTO>> SearchStock([FromQuery] string? search=null)
+        // {
+        //     var stock = await _stockRepository.SearchStockAsync(search);
+        //     return Ok(stock);
+        // }
+
     }
 }

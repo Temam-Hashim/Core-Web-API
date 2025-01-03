@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+
 
 namespace WebAPI.Models
 {
@@ -29,5 +25,14 @@ namespace WebAPI.Models
 
         public List<Comment> Comments { get; set; } = [];
 
+
+        // // // Foreign key for the User
+        // public int UserId { get; set; }
+
+        // // // Navigation property for the related user
+        // public User User { get; set; }
+
     }
+
+
 }

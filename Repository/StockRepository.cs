@@ -13,27 +13,43 @@ namespace WebAPI.Repository
 
 
 
-        public async Task<List<Stock>> GetAllStocksAsync(string? search)
+        public async Task<List<Stock>> GetAllStocksAsync(string? search, int pageSize = 10, int pageIndex = 0)
         {
+
             // return await _context.Stocks
             //     .OrderByDescending(s => s.CreatedAt) // Sort by CreatedAt in descending order
             //     .ToListAsync();
 
-            if (string.IsNullOrWhiteSpace(search))
+
+            // Validate pageSize and pageIndex
+            // if (pageSize <= 0 || pageIndex < 0)
+            //     throw new ArgumentException("Invalid page size or page index");
+
+            // Ensure pageSize and pageIndex default to valid values if not explicitly provided
+            pageSize = pageSize <= 0 ? 10 : pageSize;
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+
+            IQueryable<Stock> query = _context.Stocks;
+
+            // Apply search filter if a search term is provided
+            if (!string.IsNullOrWhiteSpace(search))
             {
-                return await _context.Stocks.
-                OrderByDescending(s => s.CreatedAt).
-                ToListAsync(); // Return all stocks if no search term is provided.
+                query = query.Where(s =>
+                    s.CompanyName.Contains(search) ||
+                    s.Industry.Contains(search) ||
+                    s.Symbol.Contains(search));
             }
 
-            var stocks = _context.Stocks.Where(s =>
-                s.CompanyName.Contains(search) ||
-                s.Industry.Contains(search) ||
-                s.Symbol.Contains(search)
-            );
+            // Apply sorting
+            query = query.OrderByDescending(s => s.CreatedAt);
 
-            return await stocks.ToListAsync();
+            // Apply pagination
+            query = query.Skip(pageSize * pageIndex).Take(pageSize);
+
+            // Execute query and return the results
+            return await query.ToListAsync();
         }
+        
 
         public async Task<Stock?> GetStockByIdAsync(Guid id)
         {

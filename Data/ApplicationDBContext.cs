@@ -13,6 +13,8 @@ namespace WebAPI.Data
         // add your models here
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Stock> Stocks { get; set; }
+
+        // public DbSet<User> Users { get; set; }
     }
 }
 

@@ -16,9 +16,9 @@ namespace WebAPI.Controllers
 
         // GET: api/v1/stock
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StockDTO>>> GetStocks([FromQuery] string? search)
+        public async Task<ActionResult<IEnumerable<StockDTO>>> GetStocks([FromQuery] string? search, int pageSize, int pageIndex)
         {
-            var stocks = await _stockRepository.GetAllStocksAsync(search);
+            var stocks = await _stockRepository.GetAllStocksAsync(search, pageSize, pageIndex);  //.ConfigureAwait(false);
             var stockDTOs = stocks.Select(stock => stock.ToStockDTO()).ToList();
             return Ok(stockDTOs);
         }

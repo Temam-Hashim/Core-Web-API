@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Models;
 
 namespace WebAPI.Data
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<User> //DbContext
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
             : base(options)
@@ -15,6 +17,25 @@ namespace WebAPI.Data
         public DbSet<Stock> Stocks { get; set; }
 
         // public DbSet<User> Users { get; set; }
+
+        // make sure at least one role for a user is out there.
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            List<IdentityRole> roles = new List<IdentityRole>{
+                new IdentityRole{
+                    Name = "admin",
+                    NormalizedName = "ADMIN"
+                },
+                new IdentityRole{
+                    Name = "user",
+                    NormalizedName = "USER"
+                }
+
+
+            };
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
+        }
     }
 }
 

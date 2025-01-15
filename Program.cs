@@ -3,26 +3,24 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using WebAPI.Data;
 using WebAPI.Interface;
 using WebAPI.Models;
 using WebAPI.Repository;
+using WebAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// builder.Services.AddDbContext<ApplicationDBContext>(options=>{
-//     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-// });
-
-
-
+// Configure DbContext for MySQL
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseMySql(
@@ -31,24 +29,34 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     );
 });
 
-builder.Services.AddIdentity<User, IdentityRole>(options=>{
+// Configure Identity
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+{
     options.User.RequireUniqueEmail = true;
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 8;
-}).AddEntityFrameworkStores<ApplicationDBContext>();
+})
+.AddEntityFrameworkStores<ApplicationDBContext>();
 
-builder.Services.AddAuthentication(options=>{
-    options.DefaultAuthenticateScheme =     //IdentityConstants.ApplicationScheme;
-    options.DefaultScheme =         //IdentityConstants.ApplicationScheme;
-    options.DefaultSignInScheme =   //IdentityConstants.ExternalScheme;
-    options.DefaultChallengeScheme =    //"Google";
-    options.DefaultSignOutScheme =      //IdentityConstants.ExternalScheme;
-    options.DefaultForbidScheme = "";
-    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options=>{
+// Configure Authentication and JWT
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+    // options.DefaultAuthenticateScheme = "JwtBearer";  //IdentityConstants.ApplicationScheme;
+    // options.DefaultScheme =         //IdentityConstants.ApplicationScheme;
+    // options.DefaultSignInScheme =   //IdentityConstants.ExternalScheme;
+    // options.DefaultChallengeScheme = "JwtBearer";  //"Google";
+    // options.DefaultSignOutScheme =      //IdentityConstants.ExternalScheme;
+    // options.DefaultForbidScheme = "";
+    // options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -64,27 +72,45 @@ builder.Services.AddAuthentication(options=>{
     };
 });
 
-
-
-
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+// Swagger Configuration
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; // Prevent cycles without adding metadata
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
     });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
+});
 
-// builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+// Register Custom Services
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-// In Program.cs or Startup.cs
-
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserStockRepository, UserStockRepository>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -92,9 +118,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
 
+app.UseAuthentication(); // Ensure authentication middleware is before authorization
 app.UseAuthorization();
 
 app.MapControllers();

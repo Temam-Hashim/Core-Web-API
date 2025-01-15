@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Data;
 using WebAPI.DTO;
@@ -16,6 +17,7 @@ namespace WebAPI.Controllers
 
         // GET: api/v1/stock
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<StockDTO>>> GetStocks([FromQuery] string? search, int pageSize, int pageIndex)
         {
             var stocks = await _stockRepository.GetAllStocksAsync(search, pageSize, pageIndex);  //.ConfigureAwait(false);

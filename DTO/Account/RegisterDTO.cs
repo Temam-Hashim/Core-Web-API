@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.DTO.Account
 {
@@ -16,6 +17,8 @@ namespace WebAPI.DTO.Account
         public string? Email { get; set; }
 
         [Required]
+        [MinLength(8)]
+    
         public string? Password { get; set; }
 
         [Required]
@@ -25,6 +28,8 @@ namespace WebAPI.DTO.Account
         public string? LastName { get; set; }
 
         [Required] 
+        [Phone]
         public string? PhoneNumber { get; set;}
+
     }
 }

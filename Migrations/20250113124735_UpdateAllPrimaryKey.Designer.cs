@@ -12,8 +12,8 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250109055059_AddFirstNameAndLastNameToUser")]
-    partial class AddFirstNameAndLastNameToUser
+    [Migration("20250113124735_UpdateAllPrimaryKey")]
+    partial class UpdateAllPrimaryKey
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,13 +53,13 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6076d615-3359-4bb7-a6ce-b98bc03557b3",
+                            Id = "663cc9c7-13f2-48fb-bbbe-29af9b3850a8",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "89223f53-291c-4569-b4fb-594cb2099fc4",
+                            Id = "bd064989-0d5b-4beb-ae42-5fcf2048d6c7",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -303,6 +303,24 @@ namespace WebAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("WebAPI.Models.UserStock", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<Guid>("StockId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("UserId", "StockId");
+
+                    b.HasIndex("StockId");
+
+                    b.ToTable("UserStock");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -363,9 +381,35 @@ namespace WebAPI.Migrations
                     b.Navigation("Stock");
                 });
 
+            modelBuilder.Entity("WebAPI.Models.UserStock", b =>
+                {
+                    b.HasOne("WebAPI.Models.Stock", "Stock")
+                        .WithMany("UserStocks")
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAPI.Models.User", "User")
+                        .WithMany("UserStocks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Stock");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WebAPI.Models.Stock", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("UserStocks");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.User", b =>
+                {
+                    b.Navigation("UserStocks");
                 });
 #pragma warning restore 612, 618
         }

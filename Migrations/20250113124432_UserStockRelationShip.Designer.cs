@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Data;
 
@@ -11,9 +12,11 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250113124432_UserStockRelationShip")]
+    partial class UserStockRelationShip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,13 +53,13 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "63fb62e0-b60b-42bd-b3e4-fe86c5ebe8cb",
+                            Id = "be8ed69f-95f2-408c-8fe4-cc0ede2ba6b7",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "ab0205a9-ca3c-4a69-b4af-ed1dd41b8e04",
+                            Id = "3dc6b603-a99f-44bf-b002-a7af02e552de",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -307,6 +310,9 @@ namespace WebAPI.Migrations
 
                     b.Property<Guid>("StockId")
                         .HasColumnType("char(36)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.HasKey("UserId", "StockId");
 

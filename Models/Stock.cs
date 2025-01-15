@@ -1,10 +1,15 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 
 
 namespace WebAPI.Models
 {
+    [Table("Stocks")]
     public class Stock
     {
+        [Key]
+        [Required]
         public Guid Id { get; set; }
         public string Symbol { get; set; } = "";
         public string CompanyName { get; set; } = string.Empty;
@@ -24,6 +29,9 @@ namespace WebAPI.Models
         // public  List<Comment> Comments { get; set; } = new List<Comment>();
 
         public List<Comment> Comments { get; set; } = [];
+
+        // Navigation property
+        public ICollection<UserStock>? UserStocks { get; set; }
 
 
         // // // Foreign key for the User

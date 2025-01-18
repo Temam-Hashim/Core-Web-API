@@ -21,7 +21,6 @@ namespace WebAPI.Models
         
         [JsonIgnore]
         public Stock? Stock { get; set; } // Navigation property
-
     
     }
 }

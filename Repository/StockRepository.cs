@@ -1,8 +1,10 @@
 
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Interface;
 using WebAPI.Models;
+using WebAPI.Service;
 
 namespace WebAPI.Repository
 {
@@ -12,57 +14,72 @@ namespace WebAPI.Repository
         private readonly ApplicationDBContext _context = context;
 
 
-
-        public async Task<List<Stock>> GetAllStocksAsync(string? search, int pageSize = 10, int pageIndex = 0)
+        public async Task<List<Stock>> GetAllStocksAsync(string search, int pageSize, int pageIndex, string userId, string role)
         {
+            var query = _context.Stocks.AsQueryable();
 
-            // return await _context.Stocks
-            //     .OrderByDescending(s => s.CreatedAt) // Sort by CreatedAt in descending order
-            //     .ToListAsync();
-
-
-            // Validate pageSize and pageIndex
-            // if (pageSize <= 0 || pageIndex < 0)
-            //     throw new ArgumentException("Invalid page size or page index");
-
-            // Ensure pageSize and pageIndex default to valid values if not explicitly provided
-            pageSize = pageSize <= 0 ? 10 : pageSize;
-            pageIndex = pageIndex < 0 ? 0 : pageIndex;
-
-            IQueryable<Stock> query = _context.Stocks;
-
-            // Apply search filter if a search term is provided
-            if (!string.IsNullOrWhiteSpace(search))
+            // Role-based filtering
+            if (!role.Equals("admin", StringComparison.CurrentCultureIgnoreCase) && !string.IsNullOrEmpty(userId))
             {
-                query = query.Where(s =>
-                    s.CompanyName.Contains(search) ||
-                    s.Industry.Contains(search) ||
-                    s.Symbol.Contains(search));
+                query = query.Where(s => s.UserId == userId);
             }
 
-            // Apply sorting
-            query = query.OrderByDescending(s => s.CreatedAt);
+            // Apply search filter if provided
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(s => s.CompanyName.Contains(search) || s.Symbol.Contains(search));
+            }
 
-            // Apply pagination
-            query = query.Skip(pageSize * pageIndex).Take(pageSize);
-
-            // Execute query and return the results
-            return await query.ToListAsync();
+            // Sort by creation date and paginate
+            return await query
+                .OrderByDescending(s => s.CreatedAt)
+                .Skip(pageSize * pageIndex)
+                .Take(pageSize)
+                .ToListAsync();
         }
-        
 
-        public async Task<Stock?> GetStockByIdAsync(Guid id)
+
+        public async Task<Stock?> GetStockByIdAsync(Guid id, string userId, string role)
         {
+            // Validate parameters
+            if (string.IsNullOrEmpty(role)) throw new ArgumentNullException(nameof(role));
+            if (string.IsNullOrEmpty(userId)) throw new ArgumentNullException(nameof(userId));
             // Fetch stock with related comments
-            var stock = await _context.Stocks
+            var stock = (Stock?)null;
+
+            if (role == "admin")
+            {
+                stock = await _context.Stocks
                 .Include(s => s.Comments)
                 .FirstOrDefaultAsync(s => s.Id == id);
+            }
+            else if (role == "user")
+            {
+                stock = await _context.Stocks
+                   .Include(s => s.Comments)
+                   .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+            }else{
+                ApiResponseService.Error(403,"Unauthorized to access");
+            }
 
-            // Return null if not found
-            if (stock == null) return null;
 
-            // Map to StockDTO
             return stock;
+
+            // Stock? stock = role switch
+            // {
+            //     "admin" => await _context.Stocks
+            //                  .Include(s => s.Comments)
+            //                  .FirstOrDefaultAsync(s => s.Id == id),
+
+            //     "user" => await _context.Stocks
+            //                 .Include(s => s.Comments)
+            //                 .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId),
+
+            //     _ => null // Handle invalid roles
+            // };
+
+            // Return stock or null
+
         }
 
         public async Task<Stock> CreateStockAsync(Stock stockModel)
@@ -70,10 +87,10 @@ namespace WebAPI.Repository
             await _context.Stocks.AddAsync(stockModel);
             await _context.SaveChangesAsync();
             return stockModel;
-        
+
         }
 
-     
+
 
         public async Task<Stock?> UpdateStockAsync(Guid id, Stock stockModel)
         {
@@ -128,9 +145,9 @@ namespace WebAPI.Repository
 
         public async Task<bool?> StockExist(Guid id)
         {
-            return await  _context.Stocks.AnyAsync(x => x.Id == id);
+            return await _context.Stocks.AnyAsync(x => x.Id == id);
         }
 
-       
+
     }
 }

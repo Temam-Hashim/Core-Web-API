@@ -1,8 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
-
 namespace WebAPI.Models
 {
     [Table("Stocks")]
@@ -25,22 +23,11 @@ namespace WebAPI.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        // [JsonIgnore]
-        // public  List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<Comment> Comments { get; set; } = new List<Comment>();
 
-        public List<Comment> Comments { get; set; } = [];
-
-        // Navigation property
-        public ICollection<UserStock>? UserStocks { get; set; }
-
-
-        // // // Foreign key for the User
-        // public int UserId { get; set; }
-
-        // // // Navigation property for the related user
-        // public User User { get; set; }
-
+        // Foreign key and navigation property
+        [Required]
+        public string UserId { get; set; } // Foreign key to User
+        public User User { get; set; } // Navigation property
     }
-
-
 }

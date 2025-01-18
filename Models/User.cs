@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
 namespace WebAPI.Models
@@ -11,8 +7,7 @@ namespace WebAPI.Models
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
 
-        // navigation property for UserStock
-        public ICollection<UserStock>? UserStocks { get; set; } // Navigation property to the join table
-
+        // Navigation property
+        public List<Stock> Stocks { get; set; } = new List<Stock>();
     }
 }

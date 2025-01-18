@@ -10,8 +10,8 @@ namespace WebAPI.Interface
 {
     public interface IStockRepository
     {
-         Task<List<Stock>> GetAllStocksAsync(string search, int pageSize, int pageIndex);
-         Task<Stock?> GetStockByIdAsync(Guid id);
+         Task<List<Stock>> GetAllStocksAsync(string search, int pageSize, int pageIndex, string userId, string role);
+         Task<Stock?> GetStockByIdAsync(Guid id, string userId, string role);
 
         Task<Stock> CreateStockAsync(Stock stockModel);
 

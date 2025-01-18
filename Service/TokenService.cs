@@ -30,9 +30,9 @@ namespace WebAPI.Service
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Name, user.UserName),
-                new Claim(JwtRegisteredClaimNames.NameId, user.Id)
+                  new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                  new Claim(JwtRegisteredClaimNames.Name, user.UserName),
+                  new Claim(ClaimTypes.NameIdentifier, user.Id) // Use ClaimTypes.NameIdentifier
             };
 
             // Fetch user roles and add them as claims

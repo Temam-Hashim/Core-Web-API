@@ -32,12 +32,21 @@ namespace WebAPI.Service
             {
                   new Claim(JwtRegisteredClaimNames.Email, user.Email),
                   new Claim(JwtRegisteredClaimNames.Name, user.UserName),
-                  new Claim(ClaimTypes.NameIdentifier, user.Id) // Use ClaimTypes.NameIdentifier
+                  new Claim(ClaimTypes.NameIdentifier, user.Id), // Use ClaimTypes.NameIdentifier
             };
 
             // Fetch user roles and add them as claims
             var roles = await _userManager.GetRolesAsync(user);
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            // claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            if (roles.Any())
+            {
+                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            }
+            else
+            {
+                // Log if no roles are found for the user
+                Console.WriteLine("No roles found for the user.");
+            }
 
             var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 

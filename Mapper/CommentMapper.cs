@@ -10,12 +10,17 @@ namespace WebAPI.Mapper
 {
     public static class CommentMapper
     {
+
+        
         public static CommentDTO ToCommentDTO(this Comment commentModel){
+            // Check if the User is null to avoid the NullReferenceException
             return new CommentDTO
             {
                 Id = commentModel.Id,
                 Title = commentModel.Title,
                 Content = commentModel.Content,
+                CreatedBy = commentModel.User != null ? commentModel.User.FirstName + " " + commentModel.User.LastName : "Anonymous",
+                UserId = commentModel.User?.Id,
                 CreatedAt = commentModel.CreatedAt,
                 StockId = commentModel.StockId
             };

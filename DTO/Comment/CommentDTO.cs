@@ -19,5 +19,9 @@ namespace WebAPI.DTO
         public string? Content { get; set; }
         public DateTime CreatedAt { get; set; }
         public Guid? StockId { get; set; }
+
+        public string CreatedBy { get; set; } = string.Empty;
+
+        public string? UserId { get; set; }
     }
 }

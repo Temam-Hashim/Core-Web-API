@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Interface;
 using WebAPI.Models;
+using WebAPI.Service;
 
 namespace WebAPI.Repository
 {
@@ -18,14 +19,15 @@ namespace WebAPI.Repository
 
         public async Task<List<Comment>> GetAllCommentsAsync()
         {
-            return await _context.Comments.ToListAsync();
+            return await _context.Comments.Include(u=>u.User).ToListAsync();
             
         }
 
         public async Task<Comment> GetCommentByIdAsync(Guid id)
         {
             var comment = await _context.Comments
-                                     // .Include(c => c.Stock)
+                                    //   .Include(c => c.Stock)
+                                      .Include(c => c.User)
                                      .FirstOrDefaultAsync(c => c.Id == id);
             if (comment == null) return null;
 
@@ -37,6 +39,8 @@ namespace WebAPI.Repository
         public async Task<List<Comment>> GetCommentByStockIdAsync(Guid stockId)
         {
             var comments = await _context.Comments
+             //                  .Include(c => c.Stock)
+                                            .Include(c => c.User)
                                             .Where(c => c.StockId == stockId)
                                             .ToListAsync();
                                         
@@ -44,14 +48,21 @@ namespace WebAPI.Repository
             return comments;
         }
 
-        public async Task<Comment> CreateCommentAsync(Guid stockId, Comment comment)
+        public async Task<Comment> CreateCommentAsync(Guid stockId, string userId, Comment comment)
         {
             // Assign the stockId to the comment
             comment.StockId = stockId;
+            comment.UserId = userId;
 
             await _context.Comments.AddAsync(comment);
             await _context.SaveChangesAsync();
-            return comment;
+
+            // Ensure the User is loaded after the comment is saved
+            var createdComment = await _context.Comments
+                .Include(c => c.User)  // Ensure User is included
+                .FirstOrDefaultAsync(c => c.Id == comment.Id);
+
+            return createdComment;  // Return the created comment with its associated User
         }
 
         public async Task<Comment> UpdateCommentAsync(Guid id, Comment commentRequest)

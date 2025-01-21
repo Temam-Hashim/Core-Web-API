@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Data;
 
@@ -11,9 +12,11 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250121082145_ComentOnetoOneUser")]
+    partial class ComentOnetoOneUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,13 +53,13 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c33ca8a1-fc6a-4d7f-b3a5-80a80787432c",
+                            Id = "50e4931a-59a8-4413-8e05-6a7ffaa8af79",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "5d90bf10-5b26-4edb-b039-f33795c6d40d",
+                            Id = "21c27ecd-cda1-4b3f-9e05-1ccb61c60608",
                             Name = "user",
                             NormalizedName = "USER"
                         });

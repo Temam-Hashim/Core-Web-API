@@ -23,7 +23,7 @@ namespace WebAPI.Models
         public Stock? Stock { get; set; } // Navigation property
 
         // Foreign key and navigation property
-        [Required]
+        // [Required]
         public string UserId { get; set; } // Foreign key to User
         public User User { get; set; } // Navigation property
     

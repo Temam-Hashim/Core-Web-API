@@ -11,7 +11,7 @@ namespace WebAPI.Interface
         Task<List<Comment>> GetAllCommentsAsync();
         Task<Comment> GetCommentByIdAsync(Guid id);
         Task<List<Comment>> GetCommentByStockIdAsync(Guid stockId);
-        Task<Comment> CreateCommentAsync(Guid stockId, Comment comment);
+        Task<Comment> CreateCommentAsync(Guid stockId, string userId, Comment comment);
         Task<Comment> UpdateCommentAsync(Guid id, Comment comment);
         Task<Comment> DeleteCommentAsync(Guid id);
 

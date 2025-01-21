@@ -44,7 +44,7 @@ namespace WebAPI.Service
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddHours(1), // Adjust expiration as needed
+                Expires = DateTime.Now.AddDays(7), // AddHours 
                 SigningCredentials = credentials,
                 Issuer = _config["JWT:Issuer"],
                 Audience = _config["JWT:Audience"]

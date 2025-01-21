@@ -12,6 +12,7 @@ namespace WebAPI.Interface
     {
          Task<List<Stock>> GetAllStocksAsync(string search, int pageSize, int pageIndex, string userId, string role);
          Task<Stock?> GetStockByIdAsync(Guid id, string userId, string role);
+        Task<Stock?> GetStockById(Guid id);
 
         Task<Stock> CreateStockAsync(Stock stockModel);
 

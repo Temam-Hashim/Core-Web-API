@@ -148,6 +148,11 @@ namespace WebAPI.Repository
             return await _context.Stocks.AnyAsync(x => x.Id == id);
         }
 
+      public async Task<Stock?> GetStockById(Guid id){
+        var stock = await _context.Stocks.FindAsync(id);
+        return stock ?? null;
+      }
+
 
     }
 }

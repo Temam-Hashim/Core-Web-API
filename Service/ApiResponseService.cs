@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Service
 {
@@ -11,10 +8,32 @@ namespace WebAPI.Service
         public string Message { get; set; }
         public object Data { get; set; }
 
-        public static ApiResponseService Success(string message, object data = null) =>
-            new ApiResponseService { StatusCode = 200, Message = message, Data = data };
+        // Generic Success Response
+        public static IActionResult Success(string message, object data = null, int statusCode = 200)
+        {
+            return new ObjectResult(new ApiResponseService
+            {
+                StatusCode = statusCode,
+                Message = message,
+                Data = data
+            })
+            {
+                StatusCode = statusCode
+            };
+        }
 
-        public static ApiResponseService Error(int statusCode, string message, object data = null) =>
-            new ApiResponseService { StatusCode = statusCode, Message = message };
+        // Generic Error Response
+        public static IActionResult Error(int statusCode, string message, object data = null)
+        {
+            return new ObjectResult(new ApiResponseService
+            {
+                StatusCode = statusCode,
+                Message = message,
+                Data = data
+            })
+            {
+                StatusCode = statusCode
+            };
+        }
     }
 }

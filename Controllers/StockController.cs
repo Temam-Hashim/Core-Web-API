@@ -9,6 +9,7 @@ using WebAPI.Extensions;
 using WebAPI.Interface;
 using WebAPI.Mapper;
 using WebAPI.Models;
+using WebAPI.Service;
 
 
 namespace WebAPI.Controllers
@@ -50,6 +51,7 @@ namespace WebAPI.Controllers
 
         // GET: api/v1/stock/{id}
         [HttpGet("{id:Guid}")]
+        [Authorize]
         public async Task<ActionResult<StockDTO>> GetStock(Guid id)
         {
             var userId = User.GetUserId();
@@ -67,6 +69,7 @@ namespace WebAPI.Controllers
 
         // POST: api/v1/stock
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<StockDTO>> CreateStock([FromBody] CreateStockRequestDTO createRequestDTO)
         {
             // Use the service to create the stock
@@ -81,16 +84,38 @@ namespace WebAPI.Controllers
 
         // PUT: api/v1/stock/{id}
         [HttpPut("{id:Guid}")]
+        [Authorize]
         public async Task<IActionResult> UpdateStock([FromRoute] Guid id, [FromBody] CreateStockRequestDTO createRequestDTO)
         {
+            // Get user information from the JWT token
+            var userId = User.GetUserId();
+            var role = User.GetRole();
+
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(role))
+                return (IActionResult)ApiResponseService.Error(403, "User information is missing or invalid.");
+
+            // Check if the user is admin or owns the stock
+            var stock = await _stockRepository.GetStockById(id);
+            if (stock == null)
+                return ApiResponseService.Error(401, "No stock found for the specified stock ID"); // NotFound("Stock not found for the specified ID.");
+
+            if (role != "admin" && stock.UserId != userId)
+                return ApiResponseService.Error(403, "You don't have permission to update this stock.");
+
+            // Proceed with the update
             var stockDTO = createRequestDTO.ToCreateStockDTO();
-            var existingStock = await _stockRepository.UpdateStockAsync(id, stockDTO);
-            if (existingStock == null) return NotFound();
-            return Ok(existingStock);
+            var updatedStock = await _stockRepository.UpdateStockAsync(id, stockDTO);
+
+            if (updatedStock == null)
+                return ApiResponseService.Error(500, "Failed to update stock, please try again!");
+
+            return ApiResponseService.Success("Stock Updated successfully!", updatedStock);
         }
+
 
         // DELETE: api/v1/stock/{id}
         [HttpDelete("{id:Guid}")]
+        [Authorize]
         public async Task<IActionResult> DeleteStock(Guid id)
         {
             // fetch existing stock
@@ -98,14 +123,14 @@ namespace WebAPI.Controllers
             if (stock == null) return NotFound();
             var userId = User.GetUserId();
             var role = User.GetRole();
-            if(userId != stock.UserId || role != "admin"){
+            if (userId != stock.UserId || role != "admin")
+            {
                 return Unauthorized("You are not authorized to delete this stock.");
             }
             var deletedStock = await _stockRepository.DeleteStockAsync(id);
             if (deletedStock == null) return NotFound();
 
             return Ok(deletedStock);
-
 
         }
 

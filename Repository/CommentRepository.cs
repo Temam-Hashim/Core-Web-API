@@ -15,18 +15,18 @@ namespace WebAPI.Repository
     {
         private readonly ApplicationDBContext _context = context;
 
-    
+
 
         public async Task<List<Comment>> GetAllCommentsAsync()
         {
-            return await _context.Comments.Include(u=>u.User).ToListAsync();
-            
+            return await _context.Comments.Include(u => u.User).ToListAsync();
+
         }
 
         public async Task<Comment> GetCommentByIdAsync(Guid id)
         {
             var comment = await _context.Comments
-                                    //   .Include(c => c.Stock)
+                                      //   .Include(c => c.Stock)
                                       .Include(c => c.User)
                                      .FirstOrDefaultAsync(c => c.Id == id);
             if (comment == null) return null;
@@ -39,11 +39,11 @@ namespace WebAPI.Repository
         public async Task<List<Comment>> GetCommentByStockIdAsync(Guid stockId)
         {
             var comments = await _context.Comments
-             //                  .Include(c => c.Stock)
+                                            //                  .Include(c => c.Stock)
                                             .Include(c => c.User)
                                             .Where(c => c.StockId == stockId)
                                             .ToListAsync();
-                                        
+
 
             return comments;
         }
@@ -75,9 +75,9 @@ namespace WebAPI.Repository
             existingComment.Content = string.IsNullOrEmpty(commentRequest.Content) ? existingComment.Content : commentRequest.Content;
 
             // _context.Comments.Update(existingComment);
-             await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-     
+
             return existingComment;
 
         }
@@ -91,10 +91,18 @@ namespace WebAPI.Repository
             await _context.SaveChangesAsync();
             return existingComment;
         }
+        public async Task<List<Comment>> GetCommentByUserIdAsync(string userId)
+        {
+            var comments = await _context.Comments.Include(u=>u.User).Where(c => c.UserId == userId).ToListAsync();;
+            if (comments == null) return null;
+            return comments
+        }
 
         public async Task<bool> CommentExists(Guid id)
         {
-            return  await _context.Comments.AnyAsync(c=>c.Id == id);
+            return await _context.Comments.AnyAsync(c => c.Id == id);
         }
+
+
     }
 }

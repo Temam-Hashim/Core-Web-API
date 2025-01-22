@@ -32,6 +32,8 @@ namespace WebAPI.DTO
         [Range(0, 999999999999)]
         public long MarketCap { get; set; }
 
-        // public List<CommentDTO>? Comments { get; set; }
+        public string CreatedBy { get; set; } = string.Empty;
+
+        public List<CommentDTO>? Comments { get; set; }
     }
 }

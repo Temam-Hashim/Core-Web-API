@@ -1,5 +1,6 @@
 
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Interface;
@@ -17,6 +18,8 @@ namespace WebAPI.Repository
         public async Task<List<Stock>> GetAllStocksAsync(string search, int pageSize, int pageIndex, string userId, string role)
         {
             var query = _context.Stocks.AsQueryable();
+            // Include the User navigation property
+            query = query.Include(s => s.User);
 
             // Role-based filtering
             if (!role.Equals("admin", StringComparison.CurrentCultureIgnoreCase) && !string.IsNullOrEmpty(userId))
@@ -50,16 +53,20 @@ namespace WebAPI.Repository
             if (role == "admin")
             {
                 stock = await _context.Stocks
+                .Include(u => u.User)
                 .Include(s => s.Comments)
                 .FirstOrDefaultAsync(s => s.Id == id);
             }
             else if (role == "user")
             {
                 stock = await _context.Stocks
+                   .Include(u => u.User)
                    .Include(s => s.Comments)
                    .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
-            }else{
-                ApiResponseService.Error(403,"Unauthorized to access");
+            }
+            else
+            {
+                ApiResponseService.Error(403, "Unauthorized to access");
             }
 
 
@@ -148,11 +155,21 @@ namespace WebAPI.Repository
             return await _context.Stocks.AnyAsync(x => x.Id == id);
         }
 
-      public async Task<Stock?> GetStockById(Guid id){
-        var stock = await _context.Stocks.FindAsync(id);
-        return stock ?? null;
-      }
+        public async Task<Stock?> GetStockById(Guid id)
+        {
+            var stock = await _context.Stocks.FindAsync(id);
+            return stock ?? null;
+        }
 
+        public async Task<Stock> GetStockBySymbolAsync(string symbol)
+        {
+            var result = await _context.Stocks.FirstOrDefaultAsync(x => x.Symbol == symbol);
+            if (result == null)
+            {
+                ApiResponseService.Error(404, "Stock not found");
+            }
 
+            return result;
+        }
     }
 }

@@ -16,7 +16,24 @@ namespace WebAPI.Mapper
                 LastDiv = stockModel.LastDiv,
                 Industry = stockModel.Industry,
                 MarketCap = stockModel.MarketCap,
+                CreatedBy = stockModel.User!=null ? stockModel.User.FirstName +" "+ stockModel.User.LastName : "Anonymous",
                 // Comments = stockModel.Comments.Select(c => c.ToCommentDTO()).ToList()
+            };
+        }
+
+        public static StockDTO ToSingleStockDTO(this Stock stockModel)
+        {
+            return new StockDTO
+            {
+                Id = stockModel.Id,
+                Symbol = stockModel.Symbol,
+                CompanyName = stockModel.CompanyName,
+                Purchase = stockModel.Purchase,
+                LastDiv = stockModel.LastDiv,
+                Industry = stockModel.Industry,
+                MarketCap = stockModel.MarketCap,
+                CreatedBy = stockModel.User != null ? stockModel.User.FirstName + " " + stockModel.User.LastName : "Anonymous",
+                Comments = stockModel.Comments.Select(c => c.ToCommentDTO()).ToList()
             };
         }
 
@@ -30,6 +47,20 @@ namespace WebAPI.Mapper
                 LastDiv = createStockRequest.LastDiv,
                 Industry = createStockRequest.Industry,
                 MarketCap = createStockRequest.MarketCap
+            };
+        }
+
+
+        public static Stock ToStockFromFMP(this FMPStock fmpStock)
+        {
+            return new Stock
+            {
+                Symbol = fmpStock.symbol,
+                CompanyName = fmpStock.companyName,
+                Purchase = (decimal)fmpStock.price,
+                LastDiv = (decimal)fmpStock.lastDiv,
+                Industry = fmpStock.industry,
+                MarketCap = fmpStock.mktCap
             };
         }
     }

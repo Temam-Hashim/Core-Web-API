@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.DTO.Account;
 using WebAPI.DTO.User;
+using WebAPI.Mapper;
 using WebAPI.Models;
 using WebAPI.Repository;
 
@@ -19,21 +21,31 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public Task<List<UserResponseDTO>> GetUsers()
+        public async Task<ActionResult<List<UserResponseDTO>>> GetUsers()
         {
-            return _userRepository.GetUsersAsync();
+            var users = await _userRepository.GetUsersAsync();
+            var userResponseDTOs = users.Select(user => user.ToUserResponse()).ToList();
+            return Ok(userResponseDTOs);
         }
+
         [HttpGet("{userId}")]
-        public Task<User> GetUser([FromRoute] string userId)
+        public async Task<ActionResult> GetUser([FromRoute] string userId)
         {
-            return null;
+            var user = await _userRepository.GetUserAsync(userId);
+            var userResponseDTOs = user.Select(user => user.ToUserResponse());
+
+            return Ok(userResponseDTOs);
 
         }
 
         [HttpPost]
-        public Task<User> CreateUser(User user)
+        public async Task<ActionResult<CreateUserDTO>> CreateUser([FromBody] CreateUserDTO user)
         {
-            return null; ;
+
+            var createUser = user.ToCreateUser(); 
+            // return  await _userRepository.CreateUserAsync(createUser);
+            return null;
+            
         }
 
         [HttpPut]

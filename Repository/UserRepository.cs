@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.DTO.User;
 using WebAPI.Interface;
+using WebAPI.Mapper;
 using WebAPI.Models;
 
 namespace WebAPI.Repository
@@ -18,21 +19,27 @@ namespace WebAPI.Repository
         public UserRepository(ApplicationDBContext context){
             _context = context;
         }
-        public async Task<List<UserResponseDTO>> GetUsersAsync()
+        public async Task<List<User>> GetUsersAsync()
         {
-            var userList = await _context.Users.ToListAsync();
-            return (List<UserResponseDTO>)userList.Select(u=>new UserResponseDTO()); ;
+
+            return await _context.Users.ToListAsync();
+            // return await _context.Users
+            //             .Select(user => user.ToUserResponse())
+            //             .ToListAsync(); // EF Core's async materialization
 
         }
-        public Task<List<User>> GetUserAsync()
+        public Task<List<User>> GetUserAsync(string id)
         {
-            throw new NotImplementedException();
+           return  _context.Users.Where(u => u.Id == id).ToListAsync();
         }
 
     
-        public Task<List<User>> CreateUserAsync(User user)
+        public async Task<User> CreateUserAsync(User user)
         {
-            throw new NotImplementedException();
+             await _context.Users.AddAsync(user);
+             await _context.SaveChangesAsync();
+             return user;
+
         }
 
 

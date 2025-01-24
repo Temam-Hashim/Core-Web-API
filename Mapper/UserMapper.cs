@@ -20,6 +20,20 @@ namespace WebAPI.Mapper
             };
         }
 
-        
+
+        public static User ToCreateUser(this CreateUserDTO userResponse)
+        {
+            return new User
+            {
+                UserName = userResponse.UserName,
+                PasswordHash = userResponse.Password,
+                Email = userResponse.Email,
+                FirstName = userResponse.FirstName,
+                LastName = userResponse.LastName,
+                PhoneNumber = userResponse.PhoneNumber
+            };
+        }
+
+
     }
 }

@@ -9,9 +9,9 @@ namespace WebAPI.Interface
 {
     public interface IUserRepository
     {
-        Task<List<UserResponseDTO>> GetUsersAsync();
-        Task<List<User>> GetUserAsync();
-        Task<List<User>> CreateUserAsync(User user);
+        Task<List<User>> GetUsersAsync();
+        Task<List<User>> GetUserAsync(string id);
+        Task<User> CreateUserAsync(User user);
         Task<List<User>> UpdateUserAsync(User user, string userId);
         Task<List<User>> DeleteUserAsync(string userId);
     }

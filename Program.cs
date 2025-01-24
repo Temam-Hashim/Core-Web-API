@@ -108,6 +108,8 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IFMPService, FMPService>();
 builder.Services.AddHttpClient<IFMPService, FMPService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<UserRepository>(); // Add this line for DI registration
 // builder.Services.AddScoped<IUserStockRepository, UserStockRepository>();
 
 var app = builder.Build();

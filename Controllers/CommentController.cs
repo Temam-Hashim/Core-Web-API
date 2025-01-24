@@ -131,6 +131,23 @@ namespace WebAPI.Controllers
         }
 
 
+        [HttpGet("user/{userId}")]
+        [Authorize]
+        public async Task<ActionResult<CommentDTO>> GetCommentsByUserId([FromRoute] string userId)
+        {
+            // Fetch all comments associated with the given stock ID
+            var comments = await _commentRepository.GetCommentByUserIdAsync(userId);
+            var commentDTO = comments.Select(comment => comment.ToCommentDTO()).ToList();
+
+            if (commentDTO == null || commentDTO.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(commentDTO);
+        }
+
+
 
     }
 }

@@ -44,7 +44,13 @@ namespace WebAPI.Repository
                                             .Where(c => c.StockId == stockId)
                                             .ToListAsync();
 
+            return comments;
+        }
 
+        public async Task<List<Comment>> GetCommentByUserIdAsync(string userId)
+        {
+            var comments = await _context.Comments.Include(u => u.User).Where(c => c.UserId == userId).ToListAsync(); ;
+            if (comments == null) return null;
             return comments;
         }
 
@@ -91,12 +97,7 @@ namespace WebAPI.Repository
             await _context.SaveChangesAsync();
             return existingComment;
         }
-        public async Task<List<Comment>> GetCommentByUserIdAsync(string userId)
-        {
-            var comments = await _context.Comments.Include(u=>u.User).Where(c => c.UserId == userId).ToListAsync();;
-            if (comments == null) return null;
-            return comments
-        }
+      
 
         public async Task<bool> CommentExists(Guid id)
         {

@@ -30,14 +30,14 @@ namespace WebAPI.Migrations
                 defaultValue: "")
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "21c27ecd-cda1-4b3f-9e05-1ccb61c60608", null, "user", "USER" },
-                    { "50e4931a-59a8-4413-8e05-6a7ffaa8af79", null, "admin", "ADMIN" }
-                });
+            // migrationBuilder.InsertData(
+            //     table: "AspNetRoles",
+            //     columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+            //     values: new object[,]
+            //     {
+            //         { "21c27ecd-cda1-4b3f-9e05-1ccb61c60608", null, "user", "USER" },
+            //         { "50e4931a-59a8-4413-8e05-6a7ffaa8af79", null, "admin", "ADMIN" }
+            //     });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_UserId",

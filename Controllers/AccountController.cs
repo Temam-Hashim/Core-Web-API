@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.DTO.Account;
+using WebAPI.DTO.Image;
 using WebAPI.Interface;
+using WebAPI.Repository;
 
 namespace WebAPI.Controllers
 {
@@ -11,15 +13,29 @@ namespace WebAPI.Controllers
     {
         private readonly IAccountRepository _accountRepository;
 
-        public AccountController(IAccountRepository accountRepository)
+        private readonly ImageRepository _imageRepository;
+
+        public AccountController(IAccountRepository accountRepository, ImageRepository imageRepository)
         {
             _accountRepository = accountRepository;
+            _imageRepository = imageRepository;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDTO registerDto)
+        public async Task<IActionResult> Register([FromForm] RegisterDTO registerDto)
         {
-            return await _accountRepository.Register(registerDto);
+            // Handle image upload
+            string profilePicture = null;
+
+            // Handle image upload
+            if (registerDto.ProfilePicture != null)
+            {
+                var imageUploadResult = await _imageRepository.UploadImageToLocalAsync(new ImageUploadDTO { Image = registerDto.ProfilePicture });
+                profilePicture = imageUploadResult.Url; // Store the file path locally
+            }
+
+            var result = await _accountRepository.Register(registerDto, profilePicture);
+            return Ok(result);
         }
 
         [HttpPost("login")]

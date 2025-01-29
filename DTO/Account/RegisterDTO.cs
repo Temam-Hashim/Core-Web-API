@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace WebAPI.DTO.Account
 {
@@ -30,6 +31,9 @@ namespace WebAPI.DTO.Account
         [Required] 
         [Phone]
         public string? PhoneNumber { get; set;}
+
+        public IFormFile? ProfilePicture { get; set; } // For the uploaded file
+ 
 
     }
 }

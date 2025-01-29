@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.DTO.Image;
 using WebAPI.DTO.User;
 using WebAPI.Extensions;
 using WebAPI.Mapper;
@@ -14,9 +15,11 @@ namespace WebAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserRepository _userRepository;
-        public UserController(UserRepository userRepository)
+        private readonly ImageRepository _imageRepository;
+        public UserController(UserRepository userRepository, ImageRepository imageRepository)
         {
             _userRepository = userRepository;
+            _imageRepository = imageRepository;
         }
 
         [HttpGet]
@@ -45,15 +48,23 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<CreateUserDTO>> CreateUser([FromBody] CreateUserDTO user)
+        public async Task<ActionResult<CreateUserDTO>> CreateUser([FromForm] CreateUserDTO user)
         {
-
             var role = User.GetRole();
             if (role != "admin")
             {
                 return Unauthorized("You are not authorized to create user.");
             }
-            var createdUser = await _userRepository.CreateUserAsync(user);
+            string profilePicture = null;
+
+            // Handle image upload
+            if (user.ProfilePicture != null)
+            {
+                var imageUploadResult = await _imageRepository.UploadImageToLocalAsync(new ImageUploadDTO { Image = user.ProfilePicture });
+                profilePicture = imageUploadResult.Url; // Store the file path locally
+            }
+
+            var createdUser = await _userRepository.CreateUserAsync(user, profilePicture);
             return Ok(createdUser);
         }
 

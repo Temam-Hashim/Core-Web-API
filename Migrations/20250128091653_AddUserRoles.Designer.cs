@@ -12,8 +12,8 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250121094546_addRoleToUser")]
-    partial class addRoleToUser
+    [Migration("20250128091653_AddUserRoles")]
+    partial class AddUserRoles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,13 +53,13 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c33ca8a1-fc6a-4d7f-b3a5-80a80787432c",
+                            Id = "ebc7bd21-5170-45f8-b3f7-7ceb2b356948",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "5d90bf10-5b26-4edb-b039-f33795c6d40d",
+                            Id = "c371c66f-3cf9-4989-a0ba-830f6e776a28",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -292,6 +292,9 @@ namespace WebAPI.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("ProfilePicture")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");

@@ -27,13 +27,20 @@ namespace WebAPI.Repository
             _signInManager = signInManager;
         }
 
-        public async Task<IActionResult> Register(RegisterDTO registerDto)
+        public async Task<IActionResult> Register(RegisterDTO registerDto, string profilePicture)
         {
             try
             {
                 if (registerDto == null) return new BadRequestResult();
 
                 var user = registerDto.ToRegisterDTO();
+
+
+                // Set the profile image path if available
+                if (!string.IsNullOrEmpty(profilePicture))
+                {
+                    user.ProfilePicture = profilePicture;
+                }
 
                 var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
                 if (createdUser.Succeeded)

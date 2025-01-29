@@ -9,7 +9,7 @@ namespace WebAPI.Interface
 {
     public interface IAccountRepository
     {
-        public Task<IActionResult> Register(RegisterDTO registerDTO);
+        public Task<IActionResult> Register(RegisterDTO registerDTO, string profilePicture);
         Task<IActionResult> Login(LoginDTO loginDTO);
     }
 }

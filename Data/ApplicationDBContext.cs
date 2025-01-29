@@ -47,19 +47,42 @@ namespace WebAPI.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
 
-        List<IdentityRole> roles = new List<IdentityRole>{
-                new IdentityRole{
-                    Name = "admin",
-                    NormalizedName = "ADMIN"
-                },
-                new IdentityRole{
-                    Name = "user",
-                    NormalizedName = "USER"
-                }
+            // List<IdentityRole> roles = new List<IdentityRole>{
+            //         new IdentityRole{
+            //             Name = "admin",
+            //             NormalizedName = "ADMIN"
+            //         },
+            //         new IdentityRole{
+            //             Name = "user",
+            //             NormalizedName = "USER"
+            //         }
 
 
-            };
-            modelBuilder.Entity<IdentityRole>().HasData(roles);
+            //     };
+            //     modelBuilder.Entity<IdentityRole>().HasData(roles);
+
+            // public async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+            // {
+            //     // Check if the 'user' role exists
+            //     if (!await roleManager.RoleExistsAsync("user"))
+            //     {
+            //         await roleManager.CreateAsync(new IdentityRole
+            //         {
+            //             Name = "user",
+            //             NormalizedName = "USER"
+            //         });
+            //     }
+
+            //     // Check if the 'admin' role exists
+            //     if (!await roleManager.RoleExistsAsync("admin"))
+            //     {
+            //         await roleManager.CreateAsync(new IdentityRole
+            //         {
+            //             Name = "admin",
+            //             NormalizedName = "ADMIN"
+            //         });
+            //     }
+            // }
         }
     }
 }

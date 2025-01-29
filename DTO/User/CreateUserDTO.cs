@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace WebAPI.DTO.User
@@ -29,5 +30,9 @@ namespace WebAPI.DTO.User
         [Required]
         [Phone]
         public string? PhoneNumber { get; set; }
+
+        public IFormFile? ProfilePicture { get; set; } // For the uploaded file
+    
+
     }
 }

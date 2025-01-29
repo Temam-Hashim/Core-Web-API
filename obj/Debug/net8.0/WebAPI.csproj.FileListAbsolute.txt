@@ -152,3 +152,4 @@ D:\Project\dotnet\WebAPI\obj\Debug\net8.0\refint\WebAPI.dll
 D:\Project\dotnet\WebAPI\obj\Debug\net8.0\WebAPI.pdb
 D:\Project\dotnet\WebAPI\obj\Debug\net8.0\WebAPI.genruntimeconfig.cache
 D:\Project\dotnet\WebAPI\obj\Debug\net8.0\ref\WebAPI.dll
+D:\Project\dotnet\WebAPI\bin\Debug\net8.0\WebAPI.staticwebassets.runtime.json

@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebAPI.Data;
@@ -101,6 +102,8 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+
+
 // Register Custom Services
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
@@ -111,9 +114,13 @@ builder.Services.AddHttpClient<IFMPService, FMPService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserRepository>(); // Add this line for DI registration
 // builder.Services.AddScoped<IUserStockRepository, UserStockRepository>();
-builder.Services.AddScoped<IImageRepository, ImageRepository>();
+// builder.Services.AddScoped<IImageRepository, ImageRepository>();
+// Register the ImageRepository service
+builder.Services.AddScoped<ImageRepository>();
 
 var app = builder.Build();
+app.UseStaticFiles();
+app.UseRouting();
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())

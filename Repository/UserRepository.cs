@@ -44,28 +44,31 @@ namespace WebAPI.Repository
             return user;
         }
 
-        public async Task<IActionResult> CreateUserAsync(CreateUserDTO userDTO)
+        public async Task<IActionResult> CreateUserAsync(CreateUserDTO userDTO, string profilePicture)
         {
             try
             {
-                // if (userDto == null) return new BadRequestResult();
-
                 // Map DTO to User model
                 var user = userDTO.ToCreateUser();
+
+                // Set the profile image path if available
+                if (!string.IsNullOrEmpty(profilePicture))
+                {
+                    user.ProfilePicture= profilePicture;
+                }
 
                 // Create the user
                 var createResult = await _userManager.CreateAsync(user, userDTO.Password);
                 if (!createResult.Succeeded)
                 {
-                   return  ApiResponseService.Error(500, "User creation failed.", createResult.Errors);
-
+                    return ApiResponseService.Error(500, "User creation failed.", createResult.Errors);
                 }
 
                 // Assign the default role to the user
                 var roleResult = await _userManager.AddToRoleAsync(user, "user");
                 if (!roleResult.Succeeded)
                 {
-                   return ApiResponseService.Error(500, "Failed to assign role to the user.", roleResult.Errors);
+                    return ApiResponseService.Error(500, "Failed to assign role to the user.", roleResult.Errors);
                 }
 
                 // Map the created user to a response DTO
@@ -77,7 +80,6 @@ namespace WebAPI.Repository
                 return new ObjectResult(ex.Message) { StatusCode = 500 };
             }
         }
-
         public async Task<User> UpdateUserAsync(UpdateUserDTO updatedUser, string userId)
         {
 

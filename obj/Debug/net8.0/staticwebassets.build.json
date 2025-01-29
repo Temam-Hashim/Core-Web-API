@@ -1,12 +1,331 @@
 {
   "Version": 1,
-  "Hash": "tDqGxdq0A4zT6y/tDdlw1NRTJSa30/3YTmJbD0pRBwc=",
+  "Hash": "r78RPHgdH21R2b7V3hR68VZsCKYMknRO2e+Fcc6jvF4=",
   "Source": "WebAPI",
   "BasePath": "_content/WebAPI",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "WebAPI\\wwwroot",
+      "Source": "WebAPI",
+      "ContentRoot": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\",
+      "BasePath": "_content/WebAPI",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\assets\\images\\create me an animated image saying watch full video on our youtube channel @temxtech. make it so stu....png",
+      "SourceId": "WebAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\",
+      "BasePath": "_content/WebAPI",
+      "RelativePath": "assets/images/create me an animated image saying watch full video on our youtube channel @temxtech. make it so stu...#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "tu8c5d9cz3",
+      "Integrity": "Kz97hZgmIEjG55lGGBP7ZkXaGxLd8N2FKFUL3VMQojk=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\images\\create me an animated image saying watch full video on our youtube channel @temxtech. make it so stu....png"
+    },
+    {
+      "Identity": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\assets\\images\\design me a beautiful thumbnail image for my youtube video on how to use telegram wallet  full video.png",
+      "SourceId": "WebAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\",
+      "BasePath": "_content/WebAPI",
+      "RelativePath": "assets/images/design me a beautiful thumbnail image for my youtube video on how to use telegram wallet  full video#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "byyq6apvvv",
+      "Integrity": "jU4bK8IqtXjf6v75KarRi9FQ48cDlYpAyJ2d9mI/rmk=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\images\\design me a beautiful thumbnail image for my youtube video on how to use telegram wallet  full video.png"
+    },
+    {
+      "Identity": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\assets\\images\\IMG_8741.jpeg",
+      "SourceId": "WebAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\",
+      "BasePath": "_content/WebAPI",
+      "RelativePath": "assets/images/IMG_8741#[.{fingerprint}]?.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "38p44j30dp",
+      "Integrity": "Tcfd7w7xAXDHgEidTEUYAJXf3ffg6/wUZT+YHgNLlYQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\images\\IMG_8741.jpeg"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "assets/images/create me an animated image saying watch full video on our youtube channel @temxtech. make it so stu....png",
+      "AssetFile": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\assets\\images\\create me an animated image saying watch full video on our youtube channel @temxtech. make it so stu....png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1150529"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Kz97hZgmIEjG55lGGBP7ZkXaGxLd8N2FKFUL3VMQojk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 29 Jan 2025 08:53:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Kz97hZgmIEjG55lGGBP7ZkXaGxLd8N2FKFUL3VMQojk="
+        }
+      ]
+    },
+    {
+      "Route": "assets/images/create me an animated image saying watch full video on our youtube channel @temxtech. make it so stu....tu8c5d9cz3.png",
+      "AssetFile": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\assets\\images\\create me an animated image saying watch full video on our youtube channel @temxtech. make it so stu....png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1150529"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Kz97hZgmIEjG55lGGBP7ZkXaGxLd8N2FKFUL3VMQojk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 29 Jan 2025 08:53:12 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "tu8c5d9cz3"
+        },
+        {
+          "Name": "label",
+          "Value": "assets/images/create me an animated image saying watch full video on our youtube channel @temxtech. make it so stu....png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Kz97hZgmIEjG55lGGBP7ZkXaGxLd8N2FKFUL3VMQojk="
+        }
+      ]
+    },
+    {
+      "Route": "assets/images/design me a beautiful thumbnail image for my youtube video on how to use telegram wallet  full video.byyq6apvvv.png",
+      "AssetFile": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\assets\\images\\design me a beautiful thumbnail image for my youtube video on how to use telegram wallet  full video.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1071290"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"jU4bK8IqtXjf6v75KarRi9FQ48cDlYpAyJ2d9mI/rmk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 29 Jan 2025 05:53:27 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "byyq6apvvv"
+        },
+        {
+          "Name": "label",
+          "Value": "assets/images/design me a beautiful thumbnail image for my youtube video on how to use telegram wallet  full video.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-jU4bK8IqtXjf6v75KarRi9FQ48cDlYpAyJ2d9mI/rmk="
+        }
+      ]
+    },
+    {
+      "Route": "assets/images/design me a beautiful thumbnail image for my youtube video on how to use telegram wallet  full video.png",
+      "AssetFile": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\assets\\images\\design me a beautiful thumbnail image for my youtube video on how to use telegram wallet  full video.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1071290"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"jU4bK8IqtXjf6v75KarRi9FQ48cDlYpAyJ2d9mI/rmk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 29 Jan 2025 05:53:27 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-jU4bK8IqtXjf6v75KarRi9FQ48cDlYpAyJ2d9mI/rmk="
+        }
+      ]
+    },
+    {
+      "Route": "assets/images/IMG_8741.38p44j30dp.jpeg",
+      "AssetFile": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\assets\\images\\IMG_8741.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3571933"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Tcfd7w7xAXDHgEidTEUYAJXf3ffg6/wUZT+YHgNLlYQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 29 Jan 2025 08:13:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "38p44j30dp"
+        },
+        {
+          "Name": "label",
+          "Value": "assets/images/IMG_8741.jpeg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Tcfd7w7xAXDHgEidTEUYAJXf3ffg6/wUZT+YHgNLlYQ="
+        }
+      ]
+    },
+    {
+      "Route": "assets/images/IMG_8741.jpeg",
+      "AssetFile": "D:\\Project\\dotnet\\WebAPI\\wwwroot\\assets\\images\\IMG_8741.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3571933"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Tcfd7w7xAXDHgEidTEUYAJXf3ffg6/wUZT+YHgNLlYQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 29 Jan 2025 08:13:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Tcfd7w7xAXDHgEidTEUYAJXf3ffg6/wUZT+YHgNLlYQ="
+        }
+      ]
+    }
+  ]
 }

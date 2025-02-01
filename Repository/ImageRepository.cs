@@ -2,38 +2,38 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using WebAPI.DTO.Image;
 
 namespace WebAPI.Repository
 {
     public class ImageRepository : IImageRepository
     {
-        private readonly IConfiguration _configuration;
-        // private readonly Cloudinary _cloudinary;
+        private readonly IConfiguration _config;
+        private readonly Cloudinary _cloudinary;
         private readonly string _localUploadFolder;
 
-        public ImageRepository(IConfiguration configuration)
+        public ImageRepository(IConfiguration config)
         {
-            _configuration = configuration;
-            _localUploadFolder = _configuration["FileStorage:LocalFolder"];
+            _config = config;
+            _localUploadFolder = _config["FileStorage:LocalFolder"];
 
-            // Cloudinary configuration
-            // var cloudinarySettings = new CloudinaryDotNet.Account(
-            //     _configuration["Cloudinary:CloudName"],
-            //     _configuration["Cloudinary:ApiKey"],
-            //     _configuration["Cloudinary:ApiSecret"]
-            // );
-            // _cloudinary = new Cloudinary(cloudinarySettings);
+            var account = new Account(
+            _config["Cloudinary:CloudName"],
+            _config["Cloudinary:ApiKey"],
+            _config["Cloudinary:ApiSecret"]
+        );
 
-            // Local folder configuration
+            _cloudinary = new Cloudinary(account);
         }
 
-    
+
 
         public async Task<ImageResponseDTO> UploadImageToLocalAsync(ImageUploadDTO imageDto)
         {
             // Upload to local folder
-            var file = imageDto.Image;
+            var file = imageDto.File;
             var filePath = Path.Combine(_localUploadFolder, file.FileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -49,21 +49,37 @@ namespace WebAPI.Repository
         }
 
 
-        // public Task<ImageResponseDTO> UploadImageToCloudinaryAsync(ImageUploadDTO imageDto)
-        // {
-        //     // Upload to Cloudinary
-        //     var file = imageDto.Image;
-        //     var uploadParams = new ImageUploadParams()
-        //     {
-        //         File = new FileDescription(file.FileName, file.OpenReadStream())
-        //     };
-        //     var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+        public async Task<object> UploadImageToCloudinaryAsync(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                throw new ArgumentException("File is empty or null.");
+            }
 
-        //     return new ImageResponseDTO
-        //     {
-        //         Url = uploadResult.Url.ToString(),
-        //         FileName = uploadResult.PublicId
-        //     };
-        // }
+            // Convert the file to a byte array
+            using var stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+            var fileBytes = stream.ToArray();
+
+            // Upload the image to Cloudinary
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, new MemoryStream(fileBytes)),
+                PublicId = Guid.NewGuid().ToString() // Generate a unique public ID
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            // Return the secure URL of the uploaded image
+            return new
+            {
+                message = "Image uploaded successfully",
+                secureUrl = uploadResult.SecureUrl.ToString(),
+                statusCode = 200,
+            };
+        }
+
+   
     }
+
 }

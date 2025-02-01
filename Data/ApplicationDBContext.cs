@@ -16,6 +16,8 @@ namespace WebAPI.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Stock> Stocks { get; set; }
 
+        public DbSet<Email> Emails { get; set; }
+
         // public DbSet<UserStock> UserStocks { get; set; }
 
         // public DbSet<User> Users { get; set; }

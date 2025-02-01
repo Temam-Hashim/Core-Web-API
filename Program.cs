@@ -1,8 +1,9 @@
+using System.Net;
+using System.Net.Mail;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebAPI.Data;
@@ -29,6 +30,9 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
         new MySqlServerVersion(new Version(8, 3, 10)) // Replace with your MySQL version
     );
 });
+
+
+
 
 // Configure Identity
 builder.Services.AddIdentity<User, IdentityRole>(options =>
@@ -117,6 +121,23 @@ builder.Services.AddScoped<UserRepository>(); // Add this line for DI registrati
 // builder.Services.AddScoped<IImageRepository, ImageRepository>();
 // Register the ImageRepository service
 builder.Services.AddScoped<ImageRepository>();
+builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+
+
+// Configure SmtpClient for Email
+builder.Services.AddSingleton<SmtpClient>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var smtpSection = config.GetSection("Smtp");
+
+    return new SmtpClient
+    {
+        Host = smtpSection["Host"],
+        Port = int.Parse(smtpSection["Port"]),
+        Credentials = new NetworkCredential(smtpSection["Username"], smtpSection["Password"]),
+        EnableSsl = bool.Parse(smtpSection["EnableSsl"]) // Ensure SSL is enabled
+    };
+});
 
 var app = builder.Build();
 app.UseStaticFiles();

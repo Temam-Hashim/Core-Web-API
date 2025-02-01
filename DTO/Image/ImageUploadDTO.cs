@@ -8,7 +8,7 @@ namespace WebAPI.DTO.Image
 
     public class ImageUploadDTO
     {
-        public IFormFile Image { get; set; }
+        public IFormFile? File { get; set; }
     }
 
    

@@ -8,7 +8,7 @@ namespace WebAPI.Repository
 {
     public interface IImageRepository
     {
-        // Task<ImageResponseDTO> UploadImageToCloudinaryAsync(ImageUploadDTO imageDto);
+        Task<object> UploadImageToCloudinaryAsync(IFormFile file);
         Task<ImageResponseDTO> UploadImageToLocalAsync(ImageUploadDTO imageDto);
     }
 }

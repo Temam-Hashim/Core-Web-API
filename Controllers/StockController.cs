@@ -23,9 +23,8 @@ namespace WebAPI.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IFMPService _fmpService;
 
-        private readonly ILogger<StockController> _logger;
-
-        public StockController(ApplicationDBContext context, IStockRepository stockRepository, UserManager<User> userManager, IFMPService fmpService, ILogger<StockController> logger)
+    
+        public StockController(ApplicationDBContext context, IStockRepository stockRepository, UserManager<User> userManager, IFMPService fmpService)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _stockRepository = stockRepository ?? throw new ArgumentNullException(nameof(stockRepository));
@@ -211,11 +210,9 @@ namespace WebAPI.Controllers
                 // Return the stock data
                 return Ok(stock);
             }
-            catch (Exception ex)
-            {
-                // Log the exception and return an error response
-                _logger.LogError(ex, "Error fetching stock data for symbol {Symbol}", symbol);
-                return StatusCode(500, "An error occurred while fetching the stock data.");
+            catch (Exception ex){
+
+                return StatusCode(500, ex.Message);
             }
         }
         // [HttpGet("filter")]

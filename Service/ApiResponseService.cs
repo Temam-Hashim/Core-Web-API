@@ -4,9 +4,9 @@ namespace WebAPI.Service
 {
     public class ApiResponseService
     {
-        public int StatusCode { get; set; }
-        public string Message { get; set; }
-        public object Data { get; set; }
+        public required int  StatusCode { get; set; }
+        public required string Message { get; set; }
+        public object Data { get; set; } = null;
 
         // Generic Success Response
         public static IActionResult Success(string message, object data = null, int statusCode = 200)

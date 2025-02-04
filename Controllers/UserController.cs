@@ -60,8 +60,10 @@ namespace WebAPI.Controllers
             // Handle image upload
             if (user.ProfilePicture != null)
             {
-                var imageUploadResult = await _imageRepository.UploadImageToLocalAsync(new ImageUploadDTO { Image = user.ProfilePicture });
+                var imageUploadResult = await _imageRepository.UploadImageToLocalAsync(new ImageUploadDTO { File = user.ProfilePicture });
                 profilePicture = imageUploadResult.Url; // Store the file path locally
+                    // var imageUploadResult = await _imageRepository.UploadImageToCloudinaryAsync(user.ProfilePicture);
+                    // profilePicture = imageUploadResult.Url; // Store the file path on Cloudinary
             }
 
             var createdUser = await _userRepository.CreateUserAsync(user, profilePicture);

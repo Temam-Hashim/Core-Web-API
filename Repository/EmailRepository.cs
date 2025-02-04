@@ -25,6 +25,16 @@ namespace WebAPI.Repository
         public async Task SendEmailAsync(Email email)
         {
 
+             if (string.IsNullOrEmpty(email.From))
+    {
+        throw new ArgumentException("From address cannot be null or empty.");
+    }
+
+    if (string.IsNullOrEmpty(email.To))
+    {
+        throw new ArgumentException("To address cannot be null or empty.");
+    }
+
 
             var mailMessage = new MailMessage
             {

@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
             // Handle image upload
             if (registerDto.ProfilePicture != null)
             {
-                var imageUploadResult = await _imageRepository.UploadImageToLocalAsync(new ImageUploadDTO { Image = registerDto.ProfilePicture });
+                var imageUploadResult = await _imageRepository.UploadImageToLocalAsync(new ImageUploadDTO { File = registerDto.ProfilePicture });
                 profilePicture = imageUploadResult.Url; // Store the file path locally
             }
 

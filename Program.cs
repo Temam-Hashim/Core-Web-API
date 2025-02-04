@@ -118,7 +118,7 @@ builder.Services.AddHttpClient<IFMPService, FMPService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserRepository>(); // Add this line for DI registration
 // builder.Services.AddScoped<IUserStockRepository, UserStockRepository>();
-// builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 // Register the ImageRepository service
 builder.Services.AddScoped<ImageRepository>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();

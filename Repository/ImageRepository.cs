@@ -12,7 +12,7 @@ namespace WebAPI.Repository
     {
         private readonly IConfiguration _config;
         private readonly Cloudinary _cloudinary;
-        private readonly string _localUploadFolder;
+        private readonly string? _localUploadFolder;
 
         public ImageRepository(IConfiguration config)
         {
@@ -32,6 +32,7 @@ namespace WebAPI.Repository
 
         public async Task<ImageResponseDTO> UploadImageToLocalAsync(ImageUploadDTO imageDto)
         {
+
             // Upload to local folder
             var file = imageDto.File;
             var filePath = Path.Combine(_localUploadFolder, file.FileName);
